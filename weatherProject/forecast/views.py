@@ -50,8 +50,8 @@ def read_historical_data(filename):
 # 3. Prepare data for training
 def prepare_data(data):
   le =  LabelEncoder()
-  data['WindGustDir'] = le.fit_transform(data['WindGustDir'])
-  data['RainTomorrow'] = le.fit_transform(data['RainTomorrow'])
+  data['WindGustDir'] = le.fit_transform(data['WindGustDir']) # Convert categorical data to numerical data
+  data['RainTomorrow'] = le.fit_transform(data['RainTomorrow']) # Convert categorical data to numerical data
 
   X = data[['MinTemp','MaxTemp','WindGustDir','WindGustSpeed','Humidity','Pressure','Temp']]
   y = data['RainTomorrow']
