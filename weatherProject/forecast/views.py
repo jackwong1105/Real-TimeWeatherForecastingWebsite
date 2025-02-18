@@ -60,26 +60,31 @@ def prepare_data(data):
 
 
 # 4. Train Rain Prediction Model
-def train_rain_model(X,y):
-  X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
-  model = RandomForestClassifier(n_estimators=100, random_state=42)
-  model.fit(X_train,y_train)
-
-  y_pred = model.predict(X_test)
+def train_rain_model(X,y): # Split to test and train to see how models performs in new unseen data, not only in exist data
+  X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42) # 20% of data for testing; 80% of data for training: 80% of data for training; The Hitchhiker's Guide to the Galaxy: 42 (or any other integer) ensures that the data split is reproducible. This means that every time you run the code, you'll get the same train-test split, which is crucial for consistency in experiments and debugging
+  model = RandomForestClassifier(n_estimators=100, random_state=42) #Group of decision tree to make prediction, 100 decision tree
+  model.fit(X_train,y_train)  #train the data
+  # after trainning the data, using model to make prediction on test data
+  y_pred = model.predict(X_test)  #make prediction on test set
   print("Mean Squared Error for Rain Model")
   print(mean_squared_error(y_test,y_pred))
+  # A lower MSE indicates that the model's predictions are closer to the actual values, meaning better performance.
+  # Conversely, a higher MSE indicates larger errors in the predictions.
 
   return model
 
 # 5. Prepare REgression data
 def prepare_regression_data(data, feature):
-  X,y = [],[]
+  X,y = [],[] # X is for store the feature value; Y is for store the target value that we want to predict
+    # like X is today temp and Y is tmr temp
+    # Regression model to learn the relationship between past and future
+
   for i in range(len(data)-1):
     X.append(data[feature].iloc[i])
 
     y.append(data[feature].iloc[i+1])
 
-  X = np.array(X).reshape(-1,1)
+  X = np.array(X).reshape(-1,1) # converts the list X into a NumPy array, reshape the array into a 2D array with one column and many rows to fit all the elements; -1 means infer the number of rows automatically
   y = np.array(y)
 
   return X,y
@@ -157,7 +162,7 @@ def weather_view(request):
         future_humidity = predict_future(hum_model, current_weather['humidity'])
 
         #prepare time for future prediction
-        timezone = pytz.timezone('Europe/London')
+        timezone = pytz.timezone('Asia/Shanghai')
 
         now = datetime.now(timezone)
         next_hour = now + timedelta(hours=1)
